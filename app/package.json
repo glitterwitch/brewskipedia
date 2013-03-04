@@ -6,6 +6,7 @@
     "wintersmith-stylus": "latest",
     "nib": "latest",
     "node-static": "latest",
-    "stylus": "latest"
+    "stylus": "latest",
+    "wintersmith-perian": "latest"
   }
 }
