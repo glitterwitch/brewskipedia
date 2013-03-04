@@ -4,9 +4,9 @@
   "devDependencies": {
     "wintersmith": "latest",
     "wintersmith-stylus": "latest",
+    "wintersmith-kelvin": "latest",
     "nib": "latest",
     "node-static": "latest",
-    "stylus": "latest",
-    "wintersmith-perian": "latest"
+    "stylus": "latest"
   }
 }
