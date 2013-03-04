@@ -1,0 +1,11 @@
+{
+  "name": "brewskipedia",
+  "version": "0.0.0",
+  "devDependencies": {
+    "wintersmith": "latest",
+    "wintersmith-stylus": "latest",
+    "nib": "latest",
+    "node-static": "latest",
+    "stylus": "latest"
+  }
+}

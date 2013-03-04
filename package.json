@@ -1,9 +1,0 @@
-{
-  "name": "brewskipedia",
-  "version": "0.0.0",
-  "devDependencies": {
-    "mason": "0.0.13",
-    "nib": "latest",
-    "node-static": "latest"
-  }
-}
