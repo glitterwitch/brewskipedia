@@ -1,0 +1,27 @@
+{
+  "index.html": {
+    "type": "jade",
+    "sourceRoot": "jade",
+    "sourcePaths": ["index.jade"],
+    "destRoot": "public",
+    "destPath": "index.html"
+  },
+  "main.css": {
+    "type": "stylus",
+    "sourceRoot": "styl",
+    "sourcePaths": ["main.styl"],
+    "destRoot": "public",
+    "destPath": "css/main.css"
+  },
+  "vendor.js": {
+    "type": "javascript",
+    "sourceRoot": "./",
+    "sourcePaths": [
+      "/js/vendor/jquery.js", 
+      "/js/vendor/knockout.js",
+      "/js/vendor/sammy.js"
+    ],
+    "destRoot": "public",
+    "destPath": "js/vendor.js"
+  }
+}

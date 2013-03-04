@@ -2,7 +2,7 @@
   "name": "brewskipedia",
   "version": "0.0.0",
   "devDependencies": {
-    "wintersmith": "latest",
+    "mason": "0.0.13",
     "nib": "latest",
     "node-static": "latest"
   }
