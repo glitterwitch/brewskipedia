@@ -3,7 +3,6 @@
     "title": "Brewskipedia: The Beer Encyclopedia"
   },
   "plugins": [
-    "./node_modules/wintersmith-stylus/",
-    "./node_modules/wintersmith-kelvin/"
+    "./node_modules/wintersmith-stylus/"
   ]
 }
