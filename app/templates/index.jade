@@ -5,23 +5,25 @@ html
     meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
     link(rel='stylesheet', href='/css/main.css')
   body
-    h1= page.title
+    .wrapper
+      header(role='masthead')
+        h1.title= page.title
 
-    p Welcome to Brewskipedia. To begin, search for a beer or brewery. You may also browse existing brews and breweries  below.
+      p Welcome to Brewskipedia! To begin, search for a beer or brewery. You may also browse existing brews and breweries  below.
 
-    form
-      fieldset
-        label(for='search') Find a beer or brewery&hellip;
-        input#search
-        input(type='submit')
+      form
+        fieldset.locate-beer
+          label.search-label(for='search') Find a beer or brewery&hellip;
+          input#query.query
+          input.search.btn(type='submit')
 
-    != page.html
+      //- != page.html
 
-    footer
-      p &copy; 2013 Tessa Harmon
-      ol(role='navigation')
-        li
-          a(href='#/about') About
+      //- footer
+      //-   p &copy; 2013 Tessa Harmon
+      //-   ol(role='navigation')
+      //-     li
+      //-       a(href='#/about') About
 
     script(src='/js/vendor/jquery.js')
     script(src='/js/vendor/sammy.js')
