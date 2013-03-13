@@ -9,9 +9,9 @@ html
       header(role='masthead')
         h1.title= page.title
 
-      p Welcome to Brewskipedia! To begin, search for a beer or brewery. You may also browse existing brews and breweries  below.
+      p Welcome to Brewskipedia! To begin, search for a beer. You may also browse existing brews below.
 
-      form
+      form(data-bind='searchBrews')
         fieldset.locate-beer
           label.search-label(for='search') Find a beer or brewery&hellip;
           input#query.query(autofocus)
@@ -31,6 +31,7 @@ html
 
     script(src='/js/vendor/ender.min.js')
     script(src='/js/vendor/knockout.js')
+    script(src='/js/components/routes.js')
     script(src='/js/viewmodels/beer.js')
     script(src='/js/viewmodels/brewery.js')
     script(src='/js/init.js')
