@@ -11,10 +11,10 @@ html
 
       p Welcome to Brewskipedia! To begin, search for a beer. You may also browse existing brews below.
 
-      form(data-bind='searchBrews')
+      form(data-bind='submit: searchBrews')
         fieldset.locate-beer
-          label.search-label(for='search') Find a beer or brewery&hellip;
-          input#query.query(autofocus)
+          label.search-label(for='search') Find a beer&hellip;
+          input#query.query(autofocus, data-bind='value: searchQuery')
           input.search.btn(type='submit', value='Search')
 
       div.col
@@ -29,9 +29,11 @@ html
           li
             a(href='#/about') About
 
-    script(src='/js/vendor/ender.min.js')
+    script(src='/js/vendor/ender.js')
     script(src='/js/vendor/knockout.js')
+    script(src='/js/config.js')
     script(src='/js/components/routes.js')
+    script(src='/js/components/api.js')
     script(src='/js/viewmodels/beer.js')
     script(src='/js/viewmodels/brewery.js')
     script(src='/js/init.js')
