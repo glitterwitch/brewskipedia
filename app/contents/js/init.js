@@ -2,7 +2,8 @@
   var beer = require('Beer'),
     brewery = require('Brewery'),
     router = require('router'),
-    api = require('api');
+    api = require('api'),
+    ui = require('ui');
 
   /**
     * Register Routes
@@ -47,5 +48,6 @@
   $.domReady(function() {
     router.listen();
     ko.applyBindings(appVM);
+    ui.supportVW();
   });
 })();
