@@ -1,8 +1,20 @@
 (function() {
   var beer = require('Beer'),
-    brewery = require('Brewery')
-    routes = require('routes')
+    brewery = require('Brewery'),
+    router = require('router'),
     api = require('api');
+
+  /**
+    * Register Routes
+    */
+  function boo(params) {
+  }
+
+  function baz(params) {
+  }
+
+  router.register('#/search/:query/(:results-page-number)', boo);
+  router.register('#/beer/:id', baz);
 
   var appVM = {
     searchQuery: ko.observable(),
@@ -11,7 +23,9 @@
     errorMessages: ko.observableArray()
   }
 
-  // Brew Search form handler.
+  /**
+    * Brew Search form handler.
+    */
   appVM.searchBrews = function(form) {
     var self = this;
 
@@ -19,6 +33,7 @@
 
     api.getBeers(q, function(err, res) {
       self.errorMessages([]);
+
       if (!err) {
         if (res.total > 0) {
           return self.currentBeers(res.beers);
@@ -30,6 +45,7 @@
   };
 
   $.domReady(function() {
+    router.listen();
     ko.applyBindings(appVM);
   });
 })();

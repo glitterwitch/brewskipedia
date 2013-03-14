@@ -4,7 +4,7 @@
   /**
    * @module Routes Routes module to proxy between our app and pathjs.
    */
-  var routes = {
+  var router = {
     /**
      * Register a route.
      *
@@ -51,12 +51,12 @@
       pathjs.listen()
 
       if(window.location.hash.length > 0) {
-        routes.dispatch(window.location.hash)
+        router.dispatch(window.location.hash)
       } 
     }
 
   }
 
-  provide('routes', routes);
+  provide('router', router);
 
 })();
