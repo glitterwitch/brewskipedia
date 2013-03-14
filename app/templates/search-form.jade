@@ -1,7 +1,8 @@
 // ko ifnot: page().name
-form(data-bind='submit: searchBrews')
-  fieldset.locate-beer
-    label.search-label(for='search') Find a beer&hellip;
-    input#query.query(autofocus, data-bind='value: searchQuery')
-    input.search.btn(type='submit', value='Search')
+.page.active
+  form(data-bind='submit: searchBrews')
+    fieldset.locate-beer
+      label.search-label(for='search') Find a beer&hellip;
+      input#query.query(autofocus, data-bind='value: searchQuery')
+      input.search.btn(type='submit', value='Search')
 // /ko
