@@ -15,12 +15,12 @@
   appVM.searchBrews = function(form) {
     var self = this;
 
-    var q = $(form).find('#query').val();
+    var q = self.searchQuery();
 
     api.getBeers(q, function(err, res) {
+      self.errorMessages([]);
       if (!err) {
         if (res.total > 0) {
-          self.errorMessages([]);
           return self.currentBeers(res.beers);
         }
         return self.errorMessages.push("Sorry, no beer found. Try again.")
