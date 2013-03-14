@@ -1,0 +1,10 @@
+// ko if: page().name === 'search-results'
+h2 Results for 
+  span(data-bind='text: searchQuery')
+
+.result-container(data-bind='foreach: currentBeers')
+  .result
+    h3(data-bind='text: name')
+    p(data-bind='text: description')
+    p(data-bind='text: abv')
+// /ko

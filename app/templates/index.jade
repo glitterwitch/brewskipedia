@@ -9,28 +9,15 @@ html
       header(role='masthead')
         h1.title= page.title
 
-      p Welcome to Brewskipedia! To begin, search for a beer. You may also browse existing brews below.
+      include error-handling
 
-      form(data-bind='submit: searchBrews')
-        fieldset.locate-beer
-          label.search-label(for='search') Find a beer&hellip;
-          input#query.query(autofocus, data-bind='value: searchQuery')
-          input.search.btn(type='submit', value='Search')
-
-      div.col
-        h1 Beer List
-        ol.beer-list
-
-      //- != page.html
-
-      footer
-        p &copy; 2013 Tessa Harmon
-        ol(role='navigation')
-          li
-            a(href='#/about') About
+      .content
+        include search-form
+        include search-results
 
     script(src='/js/vendor/ender.js')
     script(src='/js/vendor/knockout.js')
+    script(src='/js/vendor/knockout.mapping.js')
     script(src='/js/config.js')
     script(src='/js/components/routes.js')
     script(src='/js/components/api.js')
