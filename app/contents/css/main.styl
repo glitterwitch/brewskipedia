@@ -8,6 +8,9 @@
   src: local('Sail'), local('Sail-Regular'), url('sail.woff') format('woff');
 }
 
+/**
+  * Basic layout stuff
+  */
 body
   font-family "Gill Sans", "Trebuchet MS", "Helvetica", "Arial", sans-serif
   text-align center
@@ -30,7 +33,6 @@ body
 
 .title
   font-family 'Sail', cursive
-  // font-size 4.864864em
   font-size 486%
   line-height 1.25em
   text-align left
@@ -39,6 +41,12 @@ body
   background url('../images/beer.png') no-repeat
   padding-left 96px
   text-shadow 2px 2px rgba(36, 19, 25, 0.3)
+
+.msg
+  list-style-type none
+.msg.err
+  color rgb(207, 37, 40)
+  font-weight bold
 
 /* Search Form */
 .locate-beer
