@@ -2,9 +2,10 @@
   var ui = {
     /**
       * Address Chrome bug with vw units
+      * to make them recalculate on resize.
       */
     supportVW: function() {
-      var causeRepaintsOn = $("h1");
+      var causeRepaintsOn = $(".title");
 
       function repaint() {
         causeRepaintsOn.css({ 'z-index': 1 })

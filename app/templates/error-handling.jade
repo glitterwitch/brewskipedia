@@ -1,4 +1,4 @@
-// ko if: errorMessages
-ol.msg.err(data-bind='foreach: errorMessages')
+// ko if: current.errorMessages
+ol.msg.err(data-bind='foreach: current.errorMessages')
   li(data-bind='text: $data')
 // /ko

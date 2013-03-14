@@ -1,11 +1,29 @@
-// ko if: page().name === 'search-results'
-.page
+// ko if: current.page().name === 'search-results'
+.page(data-bind='attr: { class: "active" }')
   h2 Results for 
-    span(data-bind='text: searchQuery')
+    span(data-bind='text: current.searchQuery')
 
-  .result-container(data-bind='foreach: currentBeers')
+  include error-handling
+
+  // ko if: current.beers().length === 0
+  p
+    a(href='/') Search again?
+  // /ko
+
+  // ko if: current.beers().length > 0
+  // ko if: current.totalBeers() > 1
+  p(data-bind='text: current.totalBeers() + " beers found"')
+  // /ko
+
+  // ko if: current.totalBeers() === 1
+  p(data-bind='text: current.totalBeers() + " beer found"')
+  // /ko
+
+  .result-container(data-bind='foreach: current.beers')
     .result
-      h3(data-bind='text: name')
-      p(data-bind='text: description')
-      p(data-bind='text: abv')
+      h3
+        a(href='#/beers/ + id + /', data-bind='text: name')
+      p(data-bind='text: abv + "% ABV"')
+      p(data-bind='text: brewery.name')
+  // /ko
 // /ko

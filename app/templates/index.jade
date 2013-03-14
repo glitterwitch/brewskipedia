@@ -9,8 +9,6 @@ html
       header(role='masthead')
         h1.title= page.title
 
-      include error-handling
-
       .content
         include search-form
         include search-results
@@ -23,6 +21,7 @@ html
     script(src='/js/components/ui.js')
     script(src='/js/components/router.js')
     script(src='/js/components/api.js')
+    script(src='js/pages/SearchResults.js')
     script(src='/js/viewmodels/beer.js')
     script(src='/js/viewmodels/brewery.js')
     script(src='/js/init.js')

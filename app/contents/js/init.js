@@ -5,24 +5,38 @@
     api = require('api'),
     ui = require('ui');
 
+  var pages = {
+    searchResults: require('SearchResults')
+  }
+
   /**
-    * Register Routes
+    * Keep track of the state of things.
     */
-  function boo(params) {
+  var current = {
+    beers: ko.observableArray([]),
+    totalBeers: ko.observable(),
+    errorMessages: ko.observableArray([]),
+    page: ko.observable({}),
+    searchQuery: ko.observable()
   }
-
-  function baz(params) {
-  }
-
-  router.register('#/search/:query/(:results-page-number)', boo);
-  router.register('#/beer/:id', baz);
 
   var appVM = {
-    searchQuery: ko.observable(),
-    page: ko.observable({}),
-    currentBeers: ko.observableArray([]),
-    errorMessages: ko.observableArray()
+    current: current
   }
+
+    /**
+    * Declare routes for the app.
+    */
+  router.register('#/search/results/(:searchQuery)/(:resultsPageNumber)', {
+    to: function() {
+      searchResults = new pages.searchResults(this.params, appVM.current)
+    },
+    exit: function() {
+      searchResults.destroy();
+    }
+  });
+
+  router.register('#/beer/:id', {});
 
   /**
     * Brew Search form handler.
@@ -30,20 +44,24 @@
   appVM.searchBrews = function(form) {
     var self = this;
 
-    var q = self.searchQuery();
+    self.current.errorMessages.removeAll();
 
-    api.getBeers(q, function(err, res) {
-      self.errorMessages([]);
+    if (self.current.searchQuery()) {
+      q = encodeURIComponent(self.current.searchQuery());
+      return router.dispatch('#/search/results/' + q)
+    }
 
-      if (!err) {
-        if (res.total > 0) {
-          return self.currentBeers(res.beers);
-        }
-        return self.errorMessages.push("Sorry, no beer found. Try again.")
-      }
-      self.errorMessages.push("There was an error processing your search. Please try again.");
-    });
+    self.current.errorMessages.push("The beer won't search for itself.")
   };
+
+  /**
+    * Make sure error messages gets cleared out on each page.
+    */
+  appVM.current.page.subscribe(function(newPage) {
+    if (newPage) {
+      appVM.current.errorMessages.removeAll();
+    }
+  });
 
   $.domReady(function() {
     router.listen();
