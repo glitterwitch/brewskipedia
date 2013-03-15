@@ -3,9 +3,7 @@
   * Search Results Page
   */
 
-var api = require('api')
-    , router = require('router')
-    , listener = undefined;
+var api = require('api');
 
 (function() {
   var SearchResults = function(params, current) {
@@ -18,6 +16,7 @@ var api = require('api')
     this.params = params;
     this.query = decodeURIComponent(params.searchQuery) || this.current.searchQuery();
     this.pageNumber = params.resultsPageNumber;
+    this.current.beerTotalDelayed = ko.observable();
 
     this.init();
   };
@@ -39,8 +38,12 @@ var api = require('api')
       if (self.query)
         self.fetch();
 
-      self.unbindEvents();
-      self.bindEvents();
+      self.pagination();
+
+      // Throttled computed observable for error state so it doesn't flash when changing pages.
+      self.current.beerTotalDelayed = ko.computed(function() {
+        return self.current.totalBeers()
+      }, 500);
 
       return this;
     },
@@ -49,10 +52,10 @@ var api = require('api')
      * Fetch the beer results from the server.
      */
 
-    fetch: function(options) {
+    fetch: function() {
       var self = this;
 
-      self.current.totalBeers(null);
+      // self.current.totalBeers('');
       self.current.beers.removeAll();
 
       options = {
@@ -70,16 +73,22 @@ var api = require('api')
             self.current.totalResultsPages(res.pages);
             return self.current.beers(res.beers);
           }
-          return self.current.errorMessages.push("Sorry, no beer found. Try again.")
+          self.current.totalBeers(0);
+          self.current.resultsPage('');
+          self.current.totalResultsPages('');
+          return self.current.errorMessages.push("Sorry, no beer found.")
         }
-        self.current.errorMessages.push("There was an error processing your search. Please try again.");
+        self.current.totalBeers(0);
+        self.current.resultsPage('');
+        self.current.totalResultsPages('');
+        return self.current.errorMessages.push("Sorry, there was an error processing your search.");
       });
     },
 
     /**
-     * Set up needed DOM events
+     * Computed Observables
      */
-    bindEvents: function() {
+    pagination: function() {
       var self = this;
 
       // Handle pagination of search results
@@ -103,16 +112,12 @@ var api = require('api')
       });
     },
 
-    unbindEvents: function() {
-    },
-
     /**
       * Called when switching routes (on exit)
       */
     destroy: function() {
-      this.unbindEvents();
-      this.current.searchQuery(null);
-      this.current.page({ name: null, slug: null });
+      this.current.page({});
+      this.current.searchQuery('');
     }
   };
 

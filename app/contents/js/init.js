@@ -4,20 +4,23 @@
     ui = require('ui');
 
   var pages = {
-    searchResults: require('SearchResults')
+    searchResults: require('SearchResults'),
+    beerDetails: require('BeerDetails')
   }
 
   /**
     * Keep track of the state of things.
     */
   var current = {
+    beer: ko.observable(),
     beers: ko.observableArray([]),
     totalBeers: ko.observable(),
     resultsPage: ko.observable(),
     totalResultsPages: ko.observable(),
     errorMessages: ko.observableArray([]),
     page: ko.observable({}),
-    searchQuery: ko.observable()
+    searchQuery: ko.observable(),
+    beerTotalDelayed: ko.observable(1)
   }
 
   /**
@@ -39,7 +42,14 @@
     }
   });
 
-  router.register('#/beer/:id', {});
+  router.register('#/beer/:id', {
+    to: function() {
+      beerDetails = new pages.beerDetails(this.params, appVM.current)
+    },
+    exit: function() {
+      beerDetails.destroy();
+    }
+  });
 
   /**
     * Brew Search form handler.

@@ -6,12 +6,11 @@
 
   include error-handling
 
-  // ko if: current.beers().length === 0
+  // ko if: current.beerTotalDelayed() == 0
   include search-form
   // /ko
 
   // ko if: current.beers().length > 0
-
   .result-info
     // ko if: current.totalBeers() > 1
     p.total-beers(data-bind='text: current.totalBeers() + " beers found"')
@@ -26,7 +25,7 @@
   .result-container(data-bind='foreach: current.beers')
     .result
       h3
-        a.result-title(data-bind='text: name, attr: { href: "#/beers/" + id }')
+        a.result-title(data-bind='text: name, attr: { href: "#/beer/" + id }')
       p(data-bind='text: abv + "% ABV"')
       p(data-bind='text: brewery.name')
 
