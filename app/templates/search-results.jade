@@ -1,7 +1,6 @@
 // ko if: current.page().name === 'search-results'
 .page(data-bind='attr: { class: "active" }')
-  h2 Results for 
-    span(data-bind='text: current.searchQuery')
+  h2(data-bind='text: "Results for &#8220;" + current.searchQuery() + "&#8221;"')
 
   include error-handling
 
@@ -11,19 +10,26 @@
   // /ko
 
   // ko if: current.beers().length > 0
-  // ko if: current.totalBeers() > 1
-  p(data-bind='text: current.totalBeers() + " beers found"')
-  // /ko
+  include pagination
 
-  // ko if: current.totalBeers() === 1
-  p(data-bind='text: current.totalBeers() + " beer found"')
-  // /ko
+  .result-info
+    // ko if: current.totalBeers() > 1
+    p.total-beers(data-bind='text: current.totalBeers() + " beers found"')
+    // /ko
+
+    // ko if: current.totalBeers() === 1
+    p.total-beers(data-bind='text: current.totalBeers() + " beer found"')
+    // /ko
+
+    p.pages(data-bind='text: "Page " + current.resultsPage() + " of " + current.totalResultsPages()')
 
   .result-container(data-bind='foreach: current.beers')
     .result
       h3
-        a(href='#/beers/ + id + /', data-bind='text: name')
+        a.result-title(data-bind='text: name, attr: { href: "#/beers/" + id }')
       p(data-bind='text: abv + "% ABV"')
       p(data-bind='text: brewery.name')
+
+  include pagination
   // /ko
 // /ko

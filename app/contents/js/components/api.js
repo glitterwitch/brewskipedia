@@ -2,12 +2,13 @@
   var CONFIG = require('config');
 
   var api = {
-    getBeers: function(query, callback) {
+    getBeers: function(options, callback) {
       $.ajax({
         url: CONFIG.serverURL + 'beers.json'
         , method: 'GET'
         , data: { 
-          query: query
+          query: options.q
+          , page: options.pageNumber || 1
           , token: CONFIG.publicToken 
           , per_page: 5
         }

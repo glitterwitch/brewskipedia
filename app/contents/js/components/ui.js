@@ -5,7 +5,7 @@
       * to make them recalculate on resize.
       */
     supportVW: function() {
-      var causeRepaintsOn = $(".title");
+      var causeRepaintsOn = $(".title a");
 
       function repaint() {
         causeRepaintsOn.css({ 'z-index': 1 })

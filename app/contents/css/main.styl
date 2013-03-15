@@ -20,10 +20,15 @@ body
   padding 0
   color rgb(91, 92, 92)
 
+a
+  color rgb(55, 134, 138)
+  text-decoration none
+
+h2
+  margin-bottom 0
+
 .wrapper
-  // width 60%
-  // min-width 684px
-  width 60%
+  width 60% // vw fallback
   width 60vw
   text-align left
   margin 0 auto
@@ -31,9 +36,9 @@ body
   font-size 1.85em
   line-height 1.5em
   padding 1.5em
-  border-top 4em solid rgb(207, 37, 40)
+  border-top 40px solid rgb(207, 37, 40)
 
-.title
+.title a
   font-family 'Sail', cursive
   font-size 486%
   display block
@@ -47,12 +52,20 @@ body
   // padding-left 30px
   text-shadow 2px 2px rgba(36, 19, 25, 0.3)
   background-size auto 100%
+  text-decoration none
+
+.clearfix:after
+  content ""
+  display table
+  clear both
 
 /**
   * Error Messages
   */
 .msg
   list-style-type none
+  margin 0
+  padding 0
 .msg.err
   color rgb(207, 37, 40)
   font-weight bold
@@ -89,7 +102,7 @@ body
   width 30%
   width 30vw  
 
-.search
+.btn
   display block
   font-size 1.5em
   margin 0.5em auto
@@ -101,3 +114,31 @@ body
   border-radius 4px
   cursor pointer
   padding 0.25em
+  width auto
+  text-align center
+
+/**
+  * Results Page
+  */
+.result-info
+  font-size 0.9em
+
+.total-beers, .previous-page
+  float left
+
+.pages, .next-page
+  float right
+  text-align right
+
+.result-container
+  clear both
+
+.result
+  line-height 0.7em
+  margin-bottom 2em
+
+.pagination-container
+  clear both
+
+.pagination
+  display inline-block

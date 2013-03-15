@@ -1,7 +1,5 @@
 (function() {
-  var beer = require('Beer'),
-    brewery = require('Brewery'),
-    router = require('router'),
+  var router = require('router'),
     api = require('api'),
     ui = require('ui');
 
@@ -15,19 +13,24 @@
   var current = {
     beers: ko.observableArray([]),
     totalBeers: ko.observable(),
+    resultsPage: ko.observable(),
+    totalResultsPages: ko.observable(),
     errorMessages: ko.observableArray([]),
     page: ko.observable({}),
     searchQuery: ko.observable()
   }
 
+  /**
+    * Set up our master viewmodel.
+    */
   var appVM = {
     current: current
   }
 
-    /**
+  /**
     * Declare routes for the app.
     */
-  router.register('#/search/results/(:searchQuery)/(:resultsPageNumber)', {
+  router.register('#/search/results/:searchQuery(/:resultsPageNumber)', {
     to: function() {
       searchResults = new pages.searchResults(this.params, appVM.current)
     },

@@ -11,14 +11,13 @@ var api = require('api')
   var SearchResults = function(params, current) {
     this.current = current;
     this.current.page({
-      name: 'search-results'
+      name: 'search-results',
+      slug: '#/search/results/'
     });
+
     this.params = params;
     this.query = decodeURIComponent(params.searchQuery) || this.current.searchQuery();
-
-    if (!this.current.searchQuery() && params.searchQuery) {
-      this.current.searchQuery(decodeURIComponent(params.searchQuery))
-    }
+    this.pageNumber = params.resultsPageNumber;
 
     this.init();
   };
@@ -31,6 +30,13 @@ var api = require('api')
      */
     init: function () {
       var self = this;
+
+      // Set search query observable if only parameter is set (e.g. on reload)
+      if (!self.current.searchQuery() && self.params.searchQuery) {
+        self.current.searchQuery(decodeURIComponent(self.query))
+      }
+
+      self.current.page().slug += self.query + '/'
 
       if (self.query)
         self.fetch();
@@ -45,20 +51,25 @@ var api = require('api')
      * Fetch the beer results from the server.
      */
 
-    fetch: function() {
+    fetch: function(options) {
       var self = this;
 
       self.current.totalBeers(null);
       self.current.beers.removeAll();
 
-      q = self.query;
+      options = {
+        q: self.query,
+        pageNumber: self.pageNumber
+      }
 
-      api.getBeers(q, function(err, res) {
+      api.getBeers(options, function(err, res) {
         self.current.errorMessages([]);
 
         if (!err) {
           if (res.total > 0) {
             self.current.totalBeers(res.total);
+            self.current.resultsPage(res.page);
+            self.current.totalResultsPages(res.pages);
             return self.current.beers(res.beers);
           }
           return self.current.errorMessages.push("Sorry, no beer found. Try again.")
@@ -73,13 +84,28 @@ var api = require('api')
     bindEvents: function() {
       var self = this;
 
-      // $.radio('assessmentAnalysis:loaded').subscribe(assessmentListener);
-      // $.radio('question:selected').subscribe(questionListener);
+      // Handle pagination of search results
+      self.current.nextPage = ko.computed(function() {
+        var currentPage = parseInt(self.current.resultsPage());
+
+        if (currentPage < parseInt(self.current.totalResultsPages())) {
+          var pageNumber = currentPage + 1;
+          if (pageNumber)
+            return self.current.page().slug + pageNumber;
+        }
+      });
+
+      self.current.previousPage = ko.computed(function() {
+        var currentPage = parseInt(self.current.resultsPage());
+
+        if (currentPage > 1 && currentPage <= parseInt(self.current.totalResultsPages()))
+          var pageNumber = currentPage - 1;
+          if (pageNumber)
+            return self.current.page().slug + pageNumber;
+      });
     },
 
     unbindEvents: function() {
-      // $.radio('assessmentAnalysis:loaded').unsubscribe(assessmentListener);
-      // $.radio('question:selected').unsubscribe(questionListener);
     },
 
     /**
