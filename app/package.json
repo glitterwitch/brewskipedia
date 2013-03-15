@@ -4,13 +4,11 @@
   "devDependencies": {
     "wintersmith": "latest",
     "wintersmith-stylus": "latest",
-    "wintersmith-snockets": "latest",
     "nib": "latest",
     "node-static": "latest",
     "stylus": "latest"
   },
   "dependencies": {
-    "grunt-contrib-uglify": "~0.1.2",
     "grunt-wintersmith": "0.0.1"
   }
 }
