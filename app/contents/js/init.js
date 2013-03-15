@@ -64,7 +64,7 @@
       return router.dispatch('#/search/results/' + q)
     }
 
-    self.current.errorMessages.push("The beer won't find itself.")
+    return self.current.errorMessages.push("The beer won't find itself.")
   };
 
   /**

@@ -4,7 +4,9 @@
 blue = rgb(55, 134, 138)
 red = rgb(207, 37, 40)
 light = rgba(249, 255, 255, 0.9)
+lighter = rgba(249, 255, 255, 0.5)
 darkgrey = rgb(91, 92, 92)
+yellow = rgb(245, 202, 132)
 
 /**
   * Fonts via Google Webfonts
@@ -23,7 +25,7 @@ body
   font-family "Gill Sans", "Trebuchet MS", "Helvetica", "Arial", sans-serif
   text-align center
   font-size 10px
-  background url('../images/small-bubbles.png') repeat rgb(245, 202, 132)
+  background url('../images/small-bubbles.png') repeat yellow
   margin 0
   padding 0
   color darkgrey
@@ -37,6 +39,21 @@ a:hover
 
 h2
   margin-bottom 0
+
+.loader
+  position absolute
+  top 0
+  bottom 0
+  left 0 
+  right 0
+  background lighter
+  img
+    position absolute
+    top 50%
+    left 50%
+    opacity 1
+    margin-left -110px
+    margin-top -9.5px
 
 .wrapper
   width 60% // vw fallback
@@ -116,8 +133,11 @@ h2
   width 30%
   width 30vw  
 
-.btn
+.search.btn
   display block
+
+.btn
+  display inline-block
   font-size 1.5em
   margin 0.5em auto
   background blue
@@ -130,6 +150,8 @@ h2
   padding 0.25em
   width auto
   text-align center
+.btn:hover
+  color light
 
 /**
   * Search Results Page
@@ -156,6 +178,3 @@ h2
 
 .pagination
   display inline-block
-
-.pagination:hover
-  color light
