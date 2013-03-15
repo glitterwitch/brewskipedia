@@ -1,7 +1,8 @@
 (function() {
   var router = require('router'),
     api = require('api'),
-    ui = require('ui');
+    ui = require('ui'),
+    loadingListener = undefined;
 
   var pages = {
     searchResults: require('SearchResults'),
@@ -49,6 +50,18 @@
     exit: function() {
       beerDetails.destroy();
     }
+  });
+
+  /**
+    * Handle showing progress indicator.
+    */
+  loadingListener = radio('loadingListener').subscribe(function(data) {
+    if (data === 'loading:data') {
+      return $(".loader").css({ "display": "block" })
+    }
+
+    if (data === 'loading:complete')
+      return $(".loader").css({ "display": "none" })
   });
 
   /**

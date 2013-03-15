@@ -3,7 +3,8 @@
   * Search Results Page
   */
 
-var api = require('api');
+var api = require('api'),
+  loadingListener = undefined;
 
 (function() {
   var SearchResults = function(params, current) {
@@ -64,8 +65,8 @@ var api = require('api');
       }
 
       api.getBeers(options, function(err, res) {
-        self.current.errorMessages([]);
-
+        radio('loadingListener').broadcast('loading:complete');
+        self.current.errorMessages.removeAll();
         if (!err) {
           if (res.total > 0) {
             self.current.totalBeers(res.total);

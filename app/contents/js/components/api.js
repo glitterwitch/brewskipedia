@@ -6,6 +6,7 @@
       * Query the database for beer.
       */
     getBeers: function(options, callback) {
+      radio('loadingListener').broadcast('loading:data');
       $.ajax({
         url: CONFIG.serverURL + 'beers.json'
         , method: 'GET'
@@ -28,6 +29,7 @@
       * Load a specific beer from the server by id.
       */
     getBeer: function(options, callback) {
+      radio('loadingListener').broadcast('loading:data');
       $.ajax({
         url: CONFIG.serverURL + 'beers/' + options.id + '.json'
         , method: 'GET'
