@@ -1,4 +1,12 @@
 /**
+  * Color Palette
+  */
+blue = rgb(55, 134, 138)
+red = rgb(207, 37, 40)
+light = rgba(249, 255, 255, 0.9)
+darkgrey = rgb(91, 92, 92)
+
+/**
   * Fonts via Google Webfonts
   */
 @font-face {
@@ -18,11 +26,14 @@ body
   background url('../images/small-bubbles.png') repeat rgb(245, 202, 132)
   margin 0
   padding 0
-  color rgb(91, 92, 92)
+  color darkgrey
 
 a
-  color rgb(55, 134, 138)
+  color blue
   text-decoration none
+
+a:hover
+  color red
 
 h2
   margin-bottom 0
@@ -36,7 +47,7 @@ h2
   font-size 1.85em
   line-height 1.5em
   padding 1.5em
-  border-top 40px solid rgb(207, 37, 40)
+  border-top 40px solid red
 
 .title a
   font-family 'Sail', cursive
@@ -46,10 +57,9 @@ h2
   font-size 8vw
   line-height 1.25em
   text-align center
-  color rgb(55, 134, 138)
+  color blue
   margin 0.25em
   background url('../images/beer.png') no-repeat top left
-  // padding-left 30px
   text-shadow 2px 2px rgba(36, 19, 25, 0.3)
   background-size auto 100%
   text-decoration none
@@ -64,17 +74,21 @@ h2
   */
 .msg
   list-style-type none
-  margin 0
-  padding 0
+  margin 0.5em 0 1em 0
+  padding 0.5em
+  border 5px solid
+  border-radius 5px
 .msg.err
   color rgb(207, 37, 40)
   font-weight bold
+  border-color red
 
 /**
   * Page Styling
   */
 .page
-  display none
+  display none // Eliminate flickering on load/reload
+
 .active.page
   display block
 
@@ -106,9 +120,9 @@ h2
   display block
   font-size 1.5em
   margin 0.5em auto
-  background rgb(55, 134, 138)
+  background blue
   font-family 'Sail', cursive
-  color rgb(249, 255, 255, 0.9)
+  color light
   text-shadow 2px 2px rgba(36, 19, 25, 0.3)
   box-shadow 2px 2px 10px rgba(0, 0, 0, 0.3)
   border-radius 4px
@@ -118,7 +132,7 @@ h2
   text-align center
 
 /**
-  * Results Page
+  * Search Results Page
   */
 .result-info
   font-size 0.9em
@@ -142,3 +156,6 @@ h2
 
 .pagination
   display inline-block
+
+.pagination:hover
+  color light

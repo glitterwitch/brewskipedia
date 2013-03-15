@@ -36,8 +36,6 @@ var api = require('api')
         self.current.searchQuery(decodeURIComponent(self.query))
       }
 
-      self.current.page().slug += self.query + '/'
-
       if (self.query)
         self.fetch();
 
@@ -91,7 +89,7 @@ var api = require('api')
         if (currentPage < parseInt(self.current.totalResultsPages())) {
           var pageNumber = currentPage + 1;
           if (pageNumber)
-            return self.current.page().slug + pageNumber;
+            return self.current.page().slug + encodeURIComponent(self.query) + "/" + pageNumber;
         }
       });
 
@@ -101,7 +99,7 @@ var api = require('api')
         if (currentPage > 1 && currentPage <= parseInt(self.current.totalResultsPages()))
           var pageNumber = currentPage - 1;
           if (pageNumber)
-            return self.current.page().slug + pageNumber;
+            return self.current.page().slug + encodeURIComponent(self.query) + "/" + pageNumber;
       });
     },
 
