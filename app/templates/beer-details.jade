@@ -1,0 +1,8 @@
+// ko if: current.page().name === 'beer-details'
+// ko with: current.beer
+.page(data-bind='attr: { "class": "active"}')
+  h2(data-bind='text: name + " by " + brewery.name')
+  p(data-bind='text: abv + "% ABV"')
+  p(data-bind='text: description')
+// /ko
+// /ko
