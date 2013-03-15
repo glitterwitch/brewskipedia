@@ -1,14 +1,13 @@
 // ko if: current.page().name === 'search-results'
 .page(data-bind='attr: { class: "active" }')
   include pagination
-  
+
   h2(data-bind='text: "Results for &#8220;" + current.searchQuery() + "&#8221;"')
 
   include error-handling
 
   // ko if: current.beers().length === 0
-  p
-    a(href='/') Search again?
+  include search-form
   // /ko
 
   // ko if: current.beers().length > 0

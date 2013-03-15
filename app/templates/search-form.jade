@@ -1,10 +1,5 @@
-// ko ifnot: current.page().name
-.page(data-bind='attr: { class: "active" }')
-  include error-handling
-
-  form(data-bind='submit: searchBrews')
-    fieldset.locate-beer
-      label.search-label(for='search') Find a beer&hellip;
-      input#query.query(autofocus, data-bind='value: current.searchQuery')
-      input.search.btn(type='submit', value='Search')
-// /ko
+form(data-bind='submit: searchBrews')
+  fieldset.locate-beer
+    label.search-label(for='search') Find a beer&hellip;
+    input#query.query(autofocus, data-bind='value: current.searchQuery')
+    input.search.btn(type='submit', value='Search')
