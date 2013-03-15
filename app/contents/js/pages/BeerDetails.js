@@ -42,8 +42,8 @@ var api = require('api');
       var self = this;
 
       api.getBeer({ id: self.beerId }, function(err, res) {
-        radio('loadingListener').broadcast('loading:complete');
-        
+        radio('progressIndicator').broadcast('loading:complete');
+
         self.current.errorMessages.removeAll();
 
         if (!err) {

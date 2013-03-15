@@ -65,7 +65,7 @@ var api = require('api'),
       }
 
       api.getBeers(options, function(err, res) {
-        radio('loadingListener').broadcast('loading:complete');
+        radio('progressIndicator').broadcast('loading:complete');
         self.current.errorMessages.removeAll();
         if (!err) {
           if (res.total > 0) {
