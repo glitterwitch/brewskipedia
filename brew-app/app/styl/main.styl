@@ -1,12 +1,181 @@
-// Useful mixins for CSS3 effects.
-@import nib
+/**
+  * Color Palette
+  */
+blue = rgb(55, 134, 138)
+red = rgb(207, 37, 40)
+light = rgba(249, 255, 255, 0.9)
+lighter = rgba(249, 255, 255, 0.5)
+darkgrey = rgb(91, 92, 92)
+yellow = rgb(245, 202, 132)
 
-// Make browsers render HTML elements consistently.
-@import normalize
+/**
+  * Fonts via Google Webfonts
+  */
+@font-face {
+  font-family: 'Sail';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Sail'), local('Sail-Regular'), url('sail.woff') format('woff');
+}
 
+/**
+  * Basic layout stuff
+  */
 body
-  font-family 'Helvetica Neue', 'Arial', sans-serif
-  margin 0 auto
-  border 10px solid purple
+  font-family "Gill Sans", "Trebuchet MS", "Helvetica", "Arial", sans-serif
+  text-align center
+  font-size 10px
+  background url('../images/small-bubbles.png') repeat yellow
+  margin 0
+  padding 0
+  color darkgrey
 
-@import _ie8
+a
+  color blue
+  text-decoration none
+
+a:hover
+  color red
+
+h2
+  margin-bottom 0
+
+.loader
+  display none
+  position absolute
+  top 0
+  bottom 0
+  left 0 
+  right 0
+  background lighter
+  img
+    position absolute
+    top 50%
+    left 50%
+    opacity 1
+    margin-left -110px
+    margin-top -9.5px
+
+.wrapper
+  width 60% // vw fallback
+  width 60vw
+  text-align left
+  margin 0 auto
+  background-color rgba(249, 255, 255, 0.7)
+  font-size 1.85em
+  line-height 1.5em
+  padding 1.5em
+  border-top 40px solid red
+
+.title a
+  font-family 'Sail', cursive
+  font-size 2em
+  font-size 8vw
+  display block
+  z-index 1
+  line-height 1.25em
+  text-align center
+  color blue
+  margin 0.25em
+  background url('../images/beer.png') no-repeat top left
+  text-shadow 2px 2px rgba(36, 19, 25, 0.3)
+  background-size auto 100%
+  text-decoration none
+
+.clearfix:after
+  content ""
+  display table
+  clear both
+
+/**
+  * Error Messages
+  */
+.msg
+  list-style-type none
+  margin 0.5em 0 1em 0
+  padding 0.5em
+  border 5px solid
+  border-radius 5px
+.msg.err
+  color rgb(207, 37, 40)
+  font-weight bold
+  border-color red
+
+/**
+  * Page Styling
+  */
+.page
+  display none // Eliminate flickering on load/reload
+
+.active.page
+  display block
+
+/* Search Form */
+.locate-beer
+  border none
+  margin 0 auto
+  padding 0
+  text-align center
+
+.search-label
+  font-weight bold
+  display block
+  font-size 1.5em
+  margin-bottom 0.5em
+
+.query
+  border 1px solid rgb(36, 19, 25)
+  color rgb(36, 19, 25)
+  font-size 1.5em
+  border-radius 4px
+  padding 0.25em
+  box-shadow 2px 2px 10px rgba(0, 0, 0, 0.3)
+  background rgba(249, 255, 255, 0.9)
+  width 30%
+  width 30vw  
+
+.search.btn
+  display block
+
+.btn
+  display inline-block
+  font-size 1.5em
+  margin 0.5em auto
+  background blue
+  font-family 'Sail', cursive
+  color light
+  text-shadow 2px 2px rgba(36, 19, 25, 0.3)
+  box-shadow 2px 2px 10px rgba(0, 0, 0, 0.3)
+  border-radius 4px
+  cursor pointer
+  padding 0.25em
+  width auto
+  text-align center
+.btn:hover
+  color light
+
+/**
+  * Search Results Page
+  */
+.result-info
+  font-size 0.9em
+
+.total-beers, .previous-page
+  float left
+
+.pages, .next-page
+  float right
+  text-align right
+
+.result-container
+  clear both
+
+.result
+  line-height 0.7em
+  margin-bottom 2em
+
+.pagination-container
+  clear both
+
+.pagination
+  display inline-block
