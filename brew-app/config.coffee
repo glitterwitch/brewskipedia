@@ -17,8 +17,8 @@ exports.config =
         'test/javascripts/test-vendor.js': /^test(\/|\\)(?=vendor)/
       order:
         before: [
-          'vendor/js/radio.js',
           'vendor/js/ender.js',
+          'vendor/js/radio.js',
           'vendor/js/knockout.js',
           'vendor/js/knockout.mapping.js',
           'vendor/js/underscore-min.js',

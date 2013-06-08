@@ -1,7 +1,7 @@
 /*!
   * =============================================================
   * Ender: open module JavaScript framework (https://ender.no.de)
-  * Build: ender build reqwest bonzo bean domready qwery underscore jeesh pathjs
+  * Build: ender build reqwest bonzo bean domready qwery underscore jeesh pathjs radio
   * =============================================================
   */
 
@@ -131,15 +131,15 @@
 
   /*!
     * Reqwest! A general purpose XHR connection manager
-    * (c) Dustin Diaz 2012
+    * (c) Dustin Diaz 2013
     * https://github.com/ded/reqwest
     * license MIT
     */
-  !function (name, definition) {
+  !function (name, context, definition) {
     if (typeof module != 'undefined' && module.exports) module.exports = definition()
     else if (typeof define == 'function' && define.amd) define(definition)
-    else this[name] = definition()
-  }('reqwest', function () {
+    else context[name] = definition()
+  }('reqwest', this, function () {
   
     var win = window
       , doc = document
@@ -153,56 +153,72 @@
       , callbackPrefix = 'reqwest_' + (+new Date())
       , lastValue // data stored by the most recent JSONP callback
       , xmlHttpRequest = 'XMLHttpRequest'
+      , noop = function () {}
   
-    var isArray = typeof Array.isArray == 'function' ? Array.isArray : function (a) {
-      return a instanceof Array
-    }
-    var defaultHeaders = {
-        contentType: 'application/x-www-form-urlencoded'
-      , requestedWith: xmlHttpRequest
-      , accept: {
-          '*':  'text/javascript, text/html, application/xml, text/xml, */*'
-        , xml:  'application/xml, text/xml'
-        , html: 'text/html'
-        , text: 'text/plain'
-        , json: 'application/json, text/javascript'
-        , js:   'application/javascript, text/javascript'
+      , isArray = typeof Array.isArray == 'function'
+          ? Array.isArray
+          : function (a) {
+              return a instanceof Array
+            }
+  
+      , defaultHeaders = {
+            contentType: 'application/x-www-form-urlencoded'
+          , requestedWith: xmlHttpRequest
+          , accept: {
+                '*':  'text/javascript, text/html, application/xml, text/xml, */*'
+              , xml:  'application/xml, text/xml'
+              , html: 'text/html'
+              , text: 'text/plain'
+              , json: 'application/json, text/javascript'
+              , js:   'application/javascript, text/javascript'
+            }
         }
-      }
-    var xhr = win[xmlHttpRequest] ?
-      function () {
-        return new XMLHttpRequest()
-      } :
-      function () {
-        return new ActiveXObject('Microsoft.XMLHTTP')
-      }
   
-    function handleReadyState(o, success, error) {
-      return function () {
-        if (o && o[readyState] == 4) {
-          o.onreadystatechange = undefined;
-          if (twoHundo.test(o.status)) {
-            success(o)
-          } else {
-            error(o)
+      , xhr = win[xmlHttpRequest]
+          ? function () {
+              return new XMLHttpRequest()
+            }
+          : function () {
+              return new ActiveXObject('Microsoft.XMLHTTP')
+            }
+      , globalSetupOptions = {
+          dataFilter: function (data) {
+            return data
           }
+        }
+  
+    function handleReadyState(r, success, error) {
+      return function () {
+        // use _aborted to mitigate against IE err c00c023f
+        // (can't read props on aborted request objects)
+        if (r._aborted) return error(r.request)
+        if (r.request && r.request[readyState] == 4) {
+          r.request.onreadystatechange = noop
+          if (twoHundo.test(r.request.status))
+            success(r.request)
+          else
+            error(r.request)
         }
       }
     }
   
     function setHeaders(http, o) {
-      var headers = o.headers || {}, h
-      headers.Accept = headers.Accept || defaultHeaders.accept[o.type] || defaultHeaders.accept['*']
+      var headers = o.headers || {}
+        , h
+  
+      headers.Accept = headers.Accept
+        || defaultHeaders.accept[o.type]
+        || defaultHeaders.accept['*']
+  
       // breaks cross-origin requests with legacy browsers
       if (!o.crossOrigin && !headers[requestedWith]) headers[requestedWith] = defaultHeaders.requestedWith
       if (!headers[contentType]) headers[contentType] = o.contentType || defaultHeaders.contentType
-      for (h in headers) {
+      for (h in headers)
         headers.hasOwnProperty(h) && http.setRequestHeader(h, headers[h])
-      }
     }
   
     function setCredentials(http, o) {
-      if (typeof o.withCredentials !== "undefined" && typeof http.withCredentials !== "undefined") {
+      if (typeof o.withCredentials !== 'undefined' && typeof http.withCredentials !== 'undefined') {
         http.withCredentials = !!o.withCredentials
       }
     }
@@ -211,7 +227,7 @@
       lastValue = data
     }
   
-    function urlappend(url, s) {
+    function urlappend (url, s) {
       return url + (/\?/.test(url) ? '&' : '?') + s
     }
   
@@ -258,7 +274,7 @@
         script.onload = script.onreadystatechange = null
         script.onclick && script.onclick()
         // Call the user callback with the last value stored and clean up values and scripts.
-        o.success && o.success(lastValue)
+        fn(lastValue)
         lastValue = undefined
         head.removeChild(script)
         loaded = 1
@@ -266,10 +282,22 @@
   
       // Add the script to the DOM head
       head.appendChild(script)
+  
+      // Enable JSONP timeout
+      return {
+        abort: function () {
+          script.onload = script.onreadystatechange = null
+          err({}, 'Request is aborted: timeout', {})
+          lastValue = undefined
+          head.removeChild(script)
+          loaded = 1
+        }
+      }
     }
   
-    function getRequest(o, fn, err) {
-      var method = (o.method || 'GET').toUpperCase()
+    function getRequest(fn, err) {
+      var o = this.o
+        , method = (o.method || 'GET').toUpperCase()
         , url = typeof o === 'string' ? o : o.url
         // convert non-string objects to query-string form unless o.processData is false
         , data = (o.processData !== false && o.data && typeof o.data !== 'string')
@@ -287,10 +315,10 @@
       if (o.type == 'jsonp') return handleJsonp(o, fn, err, url)
   
       http = xhr()
-      http.open(method, url, true)
+      http.open(method, url, o.async === false ? false : true)
       setHeaders(http, o)
       setCredentials(http, o)
-      http.onreadystatechange = handleReadyState(http, fn, err)
+      http.onreadystatechange = handleReadyState(this, fn, err)
       o.before && o.before(http)
       http.send(data)
       return http
@@ -354,7 +382,7 @@
         })
       }
   
-      function complete(resp) {
+      function complete (resp) {
         o.timeout && clearTimeout(self.timeout)
         self.timeout = null
         while (self._completeHandlers.length > 0) {
@@ -362,8 +390,10 @@
         }
       }
   
-      function success(resp) {
-        var r = resp.responseText
+      function success (resp) {
+        // use global data filter on response text
+        var filteredResponse = globalSetupOptions.dataFilter(resp.responseText, type)
+          , r = resp.responseText = filteredResponse
         if (r) {
           switch (type) {
           case 'json':
@@ -372,16 +402,21 @@
             } catch (err) {
               return error(resp, 'Could not parse JSON in response', err)
             }
-            break;
+            break
           case 'js':
             resp = eval(r)
-            break;
+            break
           case 'html':
             resp = r
-            break;
+            break
           case 'xml':
-            resp = resp.responseXML;
-            break;
+            resp = resp.responseXML
+                && resp.responseXML.parseError // IE trololo
+                && resp.responseXML.parseError.errorCode
+                && resp.responseXML.parseError.reason
+              ? null
+              : resp.responseXML
+            break
           }
         }
   
@@ -406,11 +441,12 @@
         complete(resp)
       }
   
-      this.request = getRequest(o, success, error)
+      this.request = getRequest.call(this, success, error)
     }
   
     Reqwest.prototype = {
       abort: function () {
+        this._aborted = true
         this.request.abort()
       }
   
@@ -427,6 +463,8 @@
        * `then` will execute upon successful requests
        */
     , then: function (success, fail) {
+        success = success || function () {}
+        fail = fail || function () {}
         if (this._fulfilled) {
           success(this._responseArgs.resp)
         } else if (this._erred) {
@@ -481,32 +519,33 @@
             if (o && !o.disabled)
               cb(n, normalize(o.attributes.value && o.attributes.value.specified ? o.value : o.text))
           }
+        , ch, ra, val, i
   
       // don't serialize elements that are disabled or without a name
-      if (el.disabled || !n) return;
+      if (el.disabled || !n) return
   
       switch (t) {
       case 'input':
         if (!/reset|button|image|file/i.test(el.type)) {
-          var ch = /checkbox/i.test(el.type)
-            , ra = /radio/i.test(el.type)
-            , val = el.value;
+          ch = /checkbox/i.test(el.type)
+          ra = /radio/i.test(el.type)
+          val = el.value
           // WebKit gives us "" instead of "on" if a checkbox has no value, so correct it here
-          (!(ch || ra) || el.checked) && cb(n, normalize(ch && val === '' ? 'on' : val))
+          ;(!(ch || ra) || el.checked) && cb(n, normalize(ch && val === '' ? 'on' : val))
         }
-        break;
+        break
       case 'textarea':
         cb(n, normalize(el.value))
-        break;
+        break
       case 'select':
         if (el.type.toLowerCase() === 'select-one') {
           optCb(el.selectedIndex >= 0 ? el.options[el.selectedIndex] : null)
         } else {
-          for (var i = 0; el.length && i < el.length; i++) {
+          for (i = 0; el.length && i < el.length; i++) {
             el.options[i].selected && optCb(el.options[i])
           }
         }
-        break;
+        break
       }
     }
   
@@ -515,13 +554,14 @@
     // called with 'this'=callback to use for serial() on each element
     function eachFormElement() {
       var cb = this
-        , e, i, j
+        , e, i
         , serializeSubtags = function (e, tags) {
-          for (var i = 0; i < tags.length; i++) {
-            var fa = e[byTag](tags[i])
-            for (j = 0; j < fa.length; j++) serial(fa[j], cb)
+            var i, j, fa
+            for (i = 0; i < tags.length; i++) {
+              fa = e[byTag](tags[i])
+              for (j = 0; j < fa.length; j++) serial(fa[j], cb)
+            }
           }
-        }
   
       for (i = 0; i < arguments.length; i++) {
         e = arguments[i]
@@ -572,30 +612,59 @@
       return fn.apply(null, args)
     }
   
-    reqwest.toQueryString = function (o) {
-      var qs = '', i
+    reqwest.toQueryString = function (o, trad) {
+      var prefix, i
+        , traditional = trad || false
+        , s = []
         , enc = encodeURIComponent
-        , push = function (k, v) {
-            qs += enc(k) + '=' + enc(v) + '&'
+        , add = function (key, value) {
+            // If value is a function, invoke it and return its value
+            value = ('function' === typeof value) ? value() : (value == null ? '' : value)
+            s[s.length] = enc(key) + '=' + enc(value)
           }
-  
+      // If an array was passed in, assume that it is an array of form elements.
       if (isArray(o)) {
-        for (i = 0; o && i < o.length; i++) push(o[i].name, o[i].value)
+        for (i = 0; o && i < o.length; i++) add(o[i].name, o[i].value)
       } else {
-        for (var k in o) {
-          if (!Object.hasOwnProperty.call(o, k)) continue;
-          var v = o[k]
-          if (isArray(v)) {
-            for (i = 0; i < v.length; i++) push(k, v[i])
-          } else push(k, o[k])
+        // If traditional, encode the "old" way (the way 1.3.2 or older
+        // did it), otherwise encode params recursively.
+        for (prefix in o) {
+          buildParams(prefix, o[prefix], traditional, add)
         }
       }
   
       // spaces should be + according to spec
-      return qs.replace(/&$/, '').replace(/%20/g, '+')
+      return s.join('&').replace(/%20/g, '+')
     }
   
-    reqwest.getcallbackPrefix = function (reqId) {
+    function buildParams(prefix, obj, traditional, add) {
+      var name, i, v
+        , rbracket = /\[\]$/
+  
+      if (isArray(obj)) {
+        // Serialize array item.
+        for (i = 0; obj && i < obj.length; i++) {
+          v = obj[i]
+          if (traditional || rbracket.test(prefix)) {
+            // Treat each array item as a scalar.
+            add(prefix, v)
+          } else {
+            buildParams(prefix + '[' + (typeof v === 'object' ? i : '') + ']', v, traditional, add)
+          }
+        }
+      } else if (obj.toString() === '[object Object]') {
+        // Serialize object item.
+        for (name in obj) {
+          buildParams(prefix + '[' + name + ']', obj[name], traditional, add)
+        }
+  
+      } else {
+        // Serialize scalar item.
+        add(prefix, obj)
+      }
+    }
+  
+    reqwest.getcallbackPrefix = function () {
       return callbackPrefix
     }
   
@@ -611,6 +680,13 @@
       return new Reqwest(o, fn)
     }
   
+    reqwest.ajaxSetup = function (options) {
+      options = options || {}
+      for (var k in options) {
+        globalSetupOptions[k] = options[k]
+      }
+    }
+  
     return reqwest
   });
   
@@ -619,8 +695,8 @@
 
   !function ($) {
     var r = require('reqwest')
-      , integrate = function(method) {
-          return function() {
+      , integrate = function (method) {
+          return function () {
             var args = Array.prototype.slice.call(arguments, 0)
               , i = (this && this.length) || 0
             while (i--) args.unshift(this[i])
@@ -635,6 +711,7 @@
       , serialize: r.serialize
       , serializeArray: r.serializeArray
       , toQueryString: r.toQueryString
+      , ajaxSetup: r.ajaxSetup
     })
   
     $.ender({
@@ -4723,3 +4800,186 @@
 
 }());
 
+(function () {
+
+  var module = { exports: {} }, exports = module.exports;
+
+  /**
+   Radio.js - Chainable, Dependency Free Publish/Subscribe for Javascript
+   http://radio.uxder.com
+   Author: Scott Murphy 2011
+   twitter: @hellocreation, github: uxder
+   
+   Permission is hereby granted, free of charge, to any person
+   obtaining a copy of this software and associated documentation
+   files (the "Software"), to deal in the Software without
+   restriction, including without limitation the rights to use,
+   copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the
+   Software is furnished to do so, subject to the following
+   conditions:
+   
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+   OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+   OTHER DEALINGS IN THE SOFTWARE.
+   */
+  (function (name, global, definition) {
+    if (typeof module !== 'undefined') module.exports = definition(name, global);
+    else if (typeof define === 'function' && typeof define.amd  === 'object') define(definition);
+    else global[name] = definition(name, global);
+  })('radio', this, function (name, global) {
+  
+    "use strict";
+  
+    /**
+     * Main Wrapper for radio.$ and create a function radio to accept the channelName
+     * @param {String} channelName topic of event
+     */
+    function radio(channelName) {
+      radio.$.channel(channelName);
+      return radio.$;
+    }
+  
+    radio.$ = {
+      version: '0.2',
+      channelName: "",
+      channels: [],
+      /**
+       * Broadcast (publish)
+       * Iterate through all listeners (callbacks) in current channel and pass arguments to subscribers
+       * @param arguments data to be sent to listeners
+       * @example
+       *    //basic usage
+       *    radio('channel1').broadcast('my message'); 
+       *    //send an unlimited number of parameters
+       *    radio('channel2').broadcast(param1, param2, param3 ... );
+       */
+      broadcast: function() {
+        var i, c = this.channels[this.channelName],
+          l = c.length,
+          subscriber, callback, context;
+        //iterate through current channel and run each subscriber
+        for (i = 0; i < l; i++) {
+          subscriber = c[i];
+          //if subscriber was an array, set the callback and context.
+          if ((typeof(subscriber) === 'object') && (subscriber.length)) {
+            callback = subscriber[0];
+            //if user set the context, set it to the context otherwise, it is a globally scoped function
+            context = subscriber[1] || global;
+          }
+          callback.apply(context, arguments);
+        }
+        return this;
+      },
+  
+      /**
+       * Create the channel if it doesn't exist and set the current channel/event name
+       * @param {String} name the name of the channel
+       * @example
+       *    radio('channel1');
+       */
+      channel: function(name) {
+        var c = this.channels;
+        //create a new channel if it doesn't exists
+        if (!c[name]) c[name] = [];
+        this.channelName = name;
+        return this;
+      },
+  
+      /**
+       * Add Subscriber to channel
+       * Take the arguments and add it to the this.channels array.
+       * @param {Function|Array} arguments list of callbacks or arrays[callback, context] separated by commas
+       * @example
+       *      //basic usage
+       *      var callback = function() {};
+       *      radio('channel1').subscribe(callback); 
+       *
+       *      //subscribe an endless amount of callbacks
+       *      radio('channel1').subscribe(callback, callback2, callback3 ...);
+       *
+       *      //adding callbacks with context
+       *      radio('channel1').subscribe([callback, context],[callback1, context], callback3);
+       *     
+       *      //subscribe by chaining
+       *      radio('channel1').subscribe(callback).radio('channel2').subscribe(callback).subscribe(callback2);
+       */
+      subscribe: function() {
+        var a = arguments,
+          c = this.channels[this.channelName],
+          i, l = a.length,
+          p, ai = [];
+  
+        //run through each arguments and subscribe it to the channel
+        for (i = 0; i < l; i++) {
+          ai = a[i];
+          //if the user sent just a function, wrap the fucntion in an array [function]
+          p = (typeof(ai) === "function") ? [ai] : ai;
+          if ((typeof(p) === 'object') && (p.length)) c.push(p);
+        }
+        return this;
+      },
+  
+      /**
+       * Remove subscriber from channel
+       * Take arguments with functions and unsubscribe it if there is a match against existing subscribers.
+       * @param {Function} arguments callbacks separated by commas
+       * @example
+       *      //basic usage
+       *      radio('channel1').unsubscribe(callback); 
+       *      //you can unsubscribe as many callbacks as you want
+       *      radio('channel1').unsubscribe(callback, callback2, callback3 ...);
+       *       //removing callbacks with context is the same
+       *      radio('channel1').subscribe([callback, context]).unsubscribe(callback);
+       */
+      unsubscribe: function() {
+        var a = arguments,
+          i, j, c = this.channels[this.channelName],
+          l = a.length,
+          cl = c.length,
+          offset = 0,
+          jo;
+        //loop through each argument
+        for (i = 0; i < l; i++) {
+          //need to reset vars that change as the channel array items are removed
+          offset = 0;
+          cl = c.length;
+          //loop through the channel
+          for (j = 0; j < cl; j++) {
+            jo = j - offset;
+            //if there is a match with the argument and the channel function, unsubscribe it from the channel array
+            if (c[jo][0] === a[i]) {
+              //unsubscribe matched item from the channel array
+              c.splice(jo, 1);
+              offset++;
+            }
+          }
+        }
+        return this;
+      }
+    };
+  
+    return radio;
+  });
+  
+
+  provide("radio", module.exports);
+
+  (function ($) {
+    var radio = require('radio');
+  
+    $.ender({
+      radio: radio
+    });
+  }(ender));
+  
+
+}());
