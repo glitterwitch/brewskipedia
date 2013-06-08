@@ -12,7 +12,7 @@ In the brew-app directory, run
   npm install
 
 To start up the preview server, run
-  brunch watch
+  brunch watch -s
 
 and visit localhost:3333 in your browser. You will need to disable security settings in your browser in order for the requests to work locally.
 
