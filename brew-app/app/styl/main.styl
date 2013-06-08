@@ -105,10 +105,13 @@ h2
   * Page Styling
   */
 .page
-  display none // Eliminate flickering on load/reload
+  // display none // Eliminate flickering on load/reload
+  opacity 0
+  transition opacity 0.5s ease-in
 
 .active.page
-  display block
+  // display block
+  opacity 1
 
 /* Search Form */
 .locate-beer
