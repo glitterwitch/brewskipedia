@@ -2,7 +2,7 @@
 .page(data-bind='attr: { class: "active" }')
   include pagination
 
-  h2(data-bind='text: "Results for &#8220;" + current.searchQuery() + "&#8221;"')
+  h2(data-bind='text: "Results for “" + current.searchQuery() + "”"')
 
   include error-handling
 
