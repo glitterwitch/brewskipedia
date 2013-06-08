@@ -5,6 +5,9 @@ Searchable beer encyclopedia used in my Start Building Single Page Apps presenta
 
 * Prerequisites: node and npm
 
+Install brunch on your system, like so:
+  npm install -g brunch@1.6.1
+
 In the brew-app directory, run
   npm install
 
