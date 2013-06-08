@@ -55,7 +55,7 @@
   /**
     * Handle showing progress indicator.
     */
-  loadingListener = radio('progressIndicator').subscribe(function(data) {
+  loadingListener = $.radio('progressIndicator').subscribe(function(data) {
     if (data === 'loading:data') {
       return $(".loader").css({ "display": "block" })
     }

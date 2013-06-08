@@ -22,13 +22,13 @@ exports.config =
           'vendor/js/knockout.js',
           'vendor/js/knockout.mapping.js',
           'vendor/js/underscore-min.js',
-          'js/config.js',
-          'js/components/ui.js',
-          'js/components/router.js',
-          'js/components/api.js',
-          'js/pages/SearchResults.js',
-          'js/pages/BeerDetails.js',
-          'js/init.js'
+          'app/js/config.js',
+          'app/js/components/ui.js',
+          'app/js/components/router.js',
+          'app/js/components/api.js',
+          'app/js/pages/SearchResults.js',
+          'app/js/pages/BeerDetails.js',
+          'app/js/init.js'
         ]
 
     stylesheets:
