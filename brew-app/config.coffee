@@ -12,7 +12,20 @@ exports.config =
         'test/javascripts/test.js': /^test(\/|\\)(?!vendor)/
         'test/javascripts/test-vendor.js': /^test(\/|\\)(?=vendor)/
       order:
-        before: []
+        before: [
+          'vendor/js/radio.js',
+          'vendor/js/ender.js',
+          'vendor/js/knockout.js',
+          'vendor/js/knockout.mapping.js',
+          'vendor/js/underscore-min.js',
+          'js/config.js',
+          'js/components/ui.js',
+          'js/components/router.js',
+          'js/components/api.js',
+          'js/pages/SearchResults.js',
+          'js/pages/BeerDetails.js',
+          'js/init.js'
+        ]
 
     stylesheets:
       joinTo:
