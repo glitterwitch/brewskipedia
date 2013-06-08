@@ -4,6 +4,10 @@ exports.config =
     static_jade:
       extension: ".static.jade"
 
+  modules:
+    wrapper: false
+    definition: false
+
   files:
     javascripts:
       joinTo:
